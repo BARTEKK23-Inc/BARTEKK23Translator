@@ -39,6 +39,8 @@
     <option value="pl">Polish</option>
   </select>
   <button onclick="translateText()">Translate</button>
+  <button onclick="speakText()">Speak</button>
+  <button onclick="copyText()">Copy</button>
 
   <div id="output"></div>
 
@@ -48,7 +50,10 @@
       const target = document.getElementById('targetLang').value;
       const output = document.getElementById('output');
 
-      if (!text) { output.innerText = "Please enter some text!"; return; }
+      if (!text) {
+        output.innerText = "Please enter some text!";
+        return;
+      }
 
       try {
         const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${target}`);
@@ -58,6 +63,21 @@
         console.error(err);
         output.innerText = "Error translating text!";
       }
+    }
+
+    function speakText() {
+      const output = document.getElementById('output').innerText;
+      if (!output) return;
+      const utterance = new SpeechSynthesisUtterance(output);
+      speechSynthesis.speak(utterance);
+    }
+
+    function copyText() {
+      const output = document.getElementById('output').innerText;
+      if (!output) return;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Translated text copied!");
+      });
     }
   </script>
 </body>
