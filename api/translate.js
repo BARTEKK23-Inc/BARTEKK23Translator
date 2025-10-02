@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const response = await fetch('https://libretranslate.de/translate', {
+    const response = await fetch('https://libretranslate.com/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
