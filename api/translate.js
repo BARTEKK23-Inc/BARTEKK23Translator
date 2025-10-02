@@ -6,14 +6,17 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { text, target } = req.body;
-
-  if (!text || !target) {
-    res.status(400).json({ error: 'Missing text or target' });
-    return;
-  }
-
   try {
+    // Parse JSON safely
+    const body = req.body;
+    const text = body.text;
+    const target = body.target;
+
+    if (!text || !target) {
+      res.status(400).json({ error: 'Missing text or target' });
+      return;
+    }
+
     const response = await fetch('https://libretranslate.de/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -25,10 +28,12 @@ export default async function handler(req, res) {
       })
     });
 
+    // Make sure we get valid JSON
     const data = await response.json();
+
     res.status(200).json({ translatedText: data.translatedText });
   } catch (err) {
-    console.error(err);
+    console.error('Translation error:', err);
     res.status(500).json({ error: 'Translation failed' });
   }
 }
